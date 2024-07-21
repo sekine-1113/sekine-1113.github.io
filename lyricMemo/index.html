@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
         }
     </style>
 </head>
+
 <body>
     <textarea></textarea>
     <button>Write</button>
@@ -21,43 +22,43 @@
     <script>
         const cvs = document.querySelector("canvas");
         const init = () => {
-        const ctx = cvs.getContext('2d');
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0,0, 600, 1200);
+            const ctx = cvs.getContext('2d');
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, 600, 1200);
         }
         init();
         const dw = document.querySelector("a");
         dw.onclick = (e) => {
-        const base64 = cvs.toDataURL("image/jpeg");
-        document.querySelector("a").href = base64;
+            const base64 = cvs.toDataURL("image/jpeg");
+            document.querySelector("a").href = base64;
         }
         const drawPen = (cvs, xy) => {
-        const ctx = cvs.getContext('2d');
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#000000';
+            const ctx = cvs.getContext('2d');
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#000000';
 
-        ctx.beginPath();
-        ctx.moveTo(xy.sX, xy.sY);
-        ctx.lineTo(xy.eX, xy.eY);
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(xy.sX, xy.sY);
+            ctx.lineTo(xy.eX, xy.eY);
+            ctx.stroke();
         }
         const writeText = (cvs, text, x, y) => {
-        const ctx = cvs.getContext('2d');
-        ctx.font = "24px serif";
-        ctx.fillStyle = "#000000";
-        ctx.fillText(text, x, y);
+            const ctx = cvs.getContext('2d');
+            ctx.font = "24px serif";
+            ctx.fillStyle = "#000000";
+            ctx.fillText(text, x, y);
         }
         const tarea = document.querySelector("textarea");
         const wbtn = document.querySelector("button");
         wbtn.addEventListener('click', (e) => {
-        let x = 10;
-        let y = 50;
-        tarea.value.split("<br>").forEach(it => {
-            writeText(cvs, it, x, y);
-            y += 50;
-        })
-        })
+            let x = 10;
+            let y = 50;
+            tarea.value.split("<br>").forEach(it => {
+                writeText(cvs, it, x, y);
+                y += 50;
+            })
+        });
 
         const xy = {
             sX: 0,
@@ -70,7 +71,7 @@
             xy.sX = e.offsetX;
             xy.sY = e.offsetY;
             e.preventDefault();
-        })
+        });
 
         cvs.addEventListener('pointermove', (e) => {
             if (e.buttons != 0 || e.pressure > 0.0) {
@@ -81,12 +82,12 @@
                 xy.sY = xy.eY;
             }
             e.preventDefault();
-            })
-
-            cvs.addEventListener('pointerup', (e) => {
-            e.preventDefault();
         })
+
+        cvs.addEventListener('pointerup', (e) => {
+            e.preventDefault();
+        });
     </script>
 </body>
-</html>
 
+</html>
