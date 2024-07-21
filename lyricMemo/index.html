@@ -21,12 +21,16 @@
         <input type="radio" name="kaigyo" value="\n" id="\n">
         <label for="\n">\n</label>
     </fieldset>
-    <button>Write</button>
+    <button id="write">Write</button>
+    <button id="reset">Reset</button>
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
     <a download="canvas.jpg">ダウンロード</a>
     <div></div>
     <canvas width=600 height=1200>
     </canvas>
     <script>
+        
         const cvs = document.querySelector("canvas");
         const init = () => {
             const ctx = cvs.getContext('2d');
@@ -34,8 +38,7 @@
             ctx.fillRect(0, 0, 600, 1200);
         }
         init();
-        const dw = document.querySelector("a");
-        dw.onclick = (e) => {
+        document.querySelector("a").onclick = (e) => {
             const base64 = cvs.toDataURL("image/jpeg");
             document.querySelector("a").href = base64;
         }
@@ -57,7 +60,8 @@
             ctx.fillText(text, x, y);
         }
         const tarea = document.querySelector("textarea");
-        const wbtn = document.querySelector("button");
+        const wbtn = document.querySelector("button#write");
+        const history = [""];
         wbtn.addEventListener('click', (e) => {
             const kaigyo = document.querySelectorAll("input");
             const kaigyoCodes = ["<br>"]
@@ -71,7 +75,66 @@
             })
             let x = 10;
             let y = 50;
-            tarea.value.split(kaigyoCodes.slice(-1)).forEach(it => {
+            init();
+            history.push(tarea.value);
+            const text = history.slice(-1)[0];
+            text.split(kaigyoCodes.slice(-1) ?? "<br>").forEach(it => {
+                writeText(cvs, it, x, y);
+                y += 50;
+            })
+        });
+        const rbtn = document.querySelector("button#reset");
+        rbtn.addEventListener('click', (e) => {
+            init();
+            history.push("");
+        });
+
+        let undoCnt = 0;
+        const ubtn = document.querySelector("button#undo");
+        ubtn.addEventListener('click', (e) => {
+            const kaigyo = document.querySelectorAll("input");
+            const kaigyoCodes = ["<br>"]
+            kaigyo.forEach(it => {
+                if (it.checked) {
+                    const kaigyoCode = it.value == "br"
+                        ? "<br>"
+                        : it.value;
+                    kaigyoCodes.push(kaigyoCode);
+                }
+            })
+            let x = 10;
+            let y = 50;
+            init();
+            if (history.length >= undoCnt) {
+                undoCnt++;
+            }
+            const text = history.slice(-(1+undoCnt))[0];
+            text.split(kaigyoCodes.slice(-1) ?? "<br>").forEach(it => {
+                writeText(cvs, it, x, y);
+                y += 50;
+            })
+        });
+
+        const rdbtn = document.querySelector("button#redo");
+        rdbtn.addEventListener('click', (e) => {
+            const kaigyo = document.querySelectorAll("input");
+            const kaigyoCodes = ["<br>"]
+            kaigyo.forEach(it => {
+                if (it.checked) {
+                    const kaigyoCode = it.value == "br"
+                        ? "<br>"
+                        : it.value;
+                    kaigyoCodes.push(kaigyoCode);
+                }
+            })
+            let x = 10;
+            let y = 50;
+            init();
+            if (1 <= undoCnt) {
+                undoCnt--;
+            }
+            const text = history.slice(-(1+undoCnt))[0];
+            text.split(kaigyoCodes.slice(-1) ?? "<br>").forEach(it => {
                 writeText(cvs, it, x, y);
                 y += 50;
             })
