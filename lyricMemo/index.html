@@ -59,32 +59,32 @@
         })
         })
 
-        var xy = {
-        sX: 0,
-        sY: 0,
-        eX: 0,
-        eY: 0,
+        const xy = {
+            sX: 0,
+            sY: 0,
+            eX: 0,
+            eY: 0,
         };
 
         cvs.addEventListener('pointerdown', (e) => {
-        xy.sX = e.offsetX;
-        xy.sY = e.offsetY;
-        e.preventDefault();
+            xy.sX = e.offsetX;
+            xy.sY = e.offsetY;
+            e.preventDefault();
         })
 
         cvs.addEventListener('pointermove', (e) => {
-        if (e.buttons != 0 || e.pressure > 0.0) {
-            xy.eX = e.offsetX;
-            xy.eY = e.offsetY;
-            drawPen(cvs, xy);
-            xy.sX = xy.eX;
-            xy.sY = xy.eY;
-        }
-        e.preventDefault();
-        })
+            if (e.buttons != 0 || e.pressure > 0.0) {
+                xy.eX = e.offsetX;
+                xy.eY = e.offsetY;
+                drawPen(cvs, xy);
+                xy.sX = xy.eX;
+                xy.sY = xy.eY;
+            }
+            e.preventDefault();
+            })
 
-        cvs.addEventListener('pointerup', (e) => {
-        e.preventDefault();
+            cvs.addEventListener('pointerup', (e) => {
+            e.preventDefault();
         })
     </script>
 </body>
