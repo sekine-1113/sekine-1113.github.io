@@ -16,36 +16,47 @@
     </script>
 </head>
 <body>
-    <div class="container text-center mt-4">
-        <h2>超絶美少女中谷育ジェネレータ（β）</h2>
-        <div>
+    <div class="container mt-4">
+        <div class="text-center">
+            <h2>超絶美少女中谷育ジェネレータ（β）</h2>
             <div>
                 <div>
-                    <div>作成者：<a href="https://x.com/_alice_chang_">X（旧Twitter）@_alice_chang_</a></div>
+                    <div>
+                        <div>作成者：<a href="https://x.com/_alice_chang_">X（旧Twitter）@_alice_chang_</a></div>
+                    </div>
+                    <div>
+                        お問い合わせフォーム：<a href="https://docs.google.com/forms/d/e/1FAIpQLSd6KnttK90U_3WbP67YbHcrrEd6xUUUD5tXrJsJcjwU3JzzeQ/viewform?usp=dialog" target="_blank">https://forms.gle/Y4ydc3jTcHi7pGB88</a>
+                    </div>
+                    <div>
+                        診断メーカー版：<a href="https://shindanmaker.com/843325" target="_blank">https://shindanmaker.com/843325</a>
+                    </div>
                 </div>
-                <div>
-                    お問い合わせフォーム：<a href="https://docs.google.com/forms/d/e/1FAIpQLSd6KnttK90U_3WbP67YbHcrrEd6xUUUD5tXrJsJcjwU3JzzeQ/viewform?usp=dialog" target="_blank">https://forms.gle/Y4ydc3jTcHi7pGB88</a>
-                </div>
-                <div>
-                    診断メーカー版：<a href="https://shindanmaker.com/843325" target="_blank">https://shindanmaker.com/843325</a>
+                <div class="fs-2 pt-3">
+                    全<span id="count"></span>通り
                 </div>
             </div>
-            <div class="fs-2 pt-3">
-                全<span id="count"></span>通り
+            <div>
+                <button id="generate" type="button" class="btn btn-primary" disabled>
+                    生成する
+                </button>
+                <button id="share" type="button" class="btn btn-dark" disabled>X で結果をシェアする</button>
             </div>
-        </div>
-        <div>
-            <button id="generate" type="button" class="btn btn-primary" disabled>
-                生成する
-            </button>
-            <button id="share" type="button" class="btn btn-dark" disabled>X で結果をシェアする</button>
-        </div>
 
-        <div class="p-2">
-            <h3>生成結果</h3>
-            <div id="resultBox" class="fs-2">
+            <div class="p-2">
+                <h3>生成結果</h3>
+                <div id="resultBox" class="fs-2"></div>
             </div>
         </div>
+    </div>
+    <div>
+        <a
+            class="twitter-timeline"
+            data-height="500"
+            data-chrome="noheader nofooter"
+            href="https://twitter.com/search?q=#超絶美少女中谷育ジェネレータ&src=typed_query">
+            #超絶美少女中谷育ジェネレータ の投稿
+        </a>
+        <script async src="https://platform.twitter.com/widgets.js"></script>
     </div>
 
     <script>
