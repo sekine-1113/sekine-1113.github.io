@@ -8,9 +8,22 @@
 </head>
 <body>
     <div class="container text-center">
-        <h2>超絶美少女中谷育ジェネレータ</h2>
-        <div class="fs-3">
-            全<span id="count"></span>通り
+        <h2>超絶美少女中谷育ジェネレータ（β）</h2>
+        <div>
+            <div>
+                <div>
+                    <div>作成者：<a href="https://x.com/_alice_chang_">X（旧Twitter）@_alice_chang_</a></div>
+                </div>
+                <div>
+                    お問い合わせフォーム：<a href="https://docs.google.com/forms/d/e/1FAIpQLSd6KnttK90U_3WbP67YbHcrrEd6xUUUD5tXrJsJcjwU3JzzeQ/viewform?usp=dialog" target="_blank">https://forms.gle/Y4ydc3jTcHi7pGB88</a>
+                </div>
+                <div>
+                    診断メーカー版：<a href="https://shindanmaker.com/843325" target="_blank">https://shindanmaker.com/843325</a>
+                </div>
+            </div>
+            <div class="fs-2 pt-3">
+                全<span id="count"></span>通り
+            </div>
         </div>
         <div>
             <button id="generate" type="button" class="btn btn-primary" disabled>
@@ -60,6 +73,9 @@
             latestResult = generateResult;
             const resultBox = document.getElementById("resultBox");
             resultBox.prepend(result);
+            while (resultBox.children.length > 10) {
+                resultBox.removeChild(resultBox.lastChild);
+            }
             shareBtn.disabled = false;
         });
 
@@ -70,20 +86,23 @@
             }
 
             const text =
-            `#超絶美少女中谷育ジェネレーター\n` +
-            `生成結果：${latestResult}\n\n` +
-            `みんなも生成してみて👇\n`
+                `#超絶美少女中谷育ジェネレータ #デイリー中谷育\n` +
+                `結果：${latestResult}\n\n` +
+                `みんなも生成してみて👇\n`
             ;
 
             const url = location.href;
 
             const intentUrl =
-                "https://twitter.com/intent/tweet?text=" +
+                "https://x.com/intent/post?text=" +
                 encodeURIComponent(text) +
                 "&url=" +
                 encodeURIComponent(url);
 
             window.open(intentUrl, "_blank", "noopener,noreferrer");
+            // location.href = intentUrl;
+
+            shareBtn.disabled = true;
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
