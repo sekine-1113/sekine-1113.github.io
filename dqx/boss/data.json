@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "黄昏の奏戦記",
+    "category": "週課",
+    "resistances": [
+      { "type": "呪文", "importance": 5 },
+      { "type": "即死", "importance": 5 },
+      { "type": "眠り", "importance": 5 },
+      { "type": "踊り", "importance": 5 },
+      { "type": "闇", "importance": 4 },
+      { "type": "混乱", "importance": 3 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "試練の門",
+    "category": "週課",
+    "resistances": [
+      { "type": "即死", "importance": 5 },
+      { "type": "眠り", "importance": 5 },
+      { "type": "踊り", "importance": 5 },
+      { "type": "転び", "importance": 3 },
+      { "type": "幻惑", "importance": 5 }
+    ]
+  }
+]

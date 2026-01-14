@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DQ10 ボス耐性検索システム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="app" class="p-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white rounded-lg shadow-xl p-6 mb-6">
+                <h1 class="text-3xl font-bold text-indigo-900 mb-2 flex items-center gap-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    DQ10 ボス耐性検索システム ver8
+                </h1>
+                <p class="text-gray-600">複数のボスを選択して、必要な耐性を確認できます</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">ボス選択</h2>
+
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">カテゴリフィルター</label>
+                            <button id="toggleCategories" class="text-xs text-indigo-600 hover:text-indigo-800">
+                                <span id="toggleText">展開</span>
+                            </button>
+                        </div>
+                        <div id="categoryFilters" class="hidden grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="週課" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">週課</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="防衛軍" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">防衛軍</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="キャンプ" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">キャンプ</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="パニガルム" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">パニガルム</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="異界" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">異界</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="常闇" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">常闇</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="聖守護者" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">聖守護者</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="咎人" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">咎人</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="輝晶獣" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">輝晶獣</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" value="コインボス" class="category-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-sm">コインボス</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="relative mb-4">
+                        <svg class="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="ボス名で検索..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        />
+                    </div>
+
+                    <div id="bossList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+
+                    <button
+                        id="clearButton"
+                        class="w-full mt-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium text-gray-700 transition hidden"
+                    >
+                        選択をクリア
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">
+                        必要な耐性
+                        <span id="selectedCount" class="text-sm font-normal text-gray-600 ml-2"></span>
+                    </h2>
+
+                    <div id="resistanceResult"></div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-white rounded-lg shadow-lg p-4">
+                <h3 class="font-bold text-gray-800 mb-2">使い方</h3>
+                <ul class="text-sm text-gray-600 space-y-1">
+                    <li>• カテゴリフィルターでボスの種類を絞り込めます</li>
+                    <li>• 挑戦したいボスを複数選択できます</li>
+                    <li>• 重要度は★5つで最重要、★1つで低優先度を示します</li>
+                    <li>• 複数ボス選択時は、最も高い重要度と必要なボス数が表示されます</li>
+                    <li>• 耐性は重要度順にソートされます</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultBossData = [
+            {
+                id: 1,
+                name: 'デルメゼ',
+                category: 'コインボス',
+                resistances: [
+                    { type: '即死', importance: 5 },
+                    { type: '呪い', importance: 5 },
+                    { type: '幻惑', importance: 4 },
+                    { type: '封印', importance: 3 }
+                ]
+            },
+            {
+                id: 2,
+                name: 'レグナード',
+                category: 'コインボス',
+                resistances: [
+                    { type: 'ブレス', importance: 5 },
+                    { type: '麻痺', importance: 4 },
+                    { type: '即死', importance: 5 },
+                    { type: '呪い', importance: 3 }
+                ]
+            },
+            {
+                id: 3,
+                name: 'スコルパイド',
+                category: '聖守護者',
+                resistances: [
+                    { type: '即死', importance: 5 },
+                    { type: '毒', importance: 5 },
+                    { type: '幻惑', importance: 4 },
+                    { type: '封印', importance: 3 }
+                ]
+            },
+            {
+                id: 4,
+                name: 'ガルドドン',
+                category: '聖守護者',
+                resistances: [
+                    { type: '炎', importance: 5 },
+                    { type: '即死', importance: 5 },
+                    { type: '混乱', importance: 4 },
+                    { type: '呪い', importance: 3 }
+                ]
+            },
+            {
+                id: 5,
+                name: 'メイヴ',
+                category: '聖守護者',
+                resistances: [
+                    { type: '即死', importance: 5 },
+                    { type: '呪い', importance: 4 },
+                    { type: '魅了', importance: 4 },
+                    { type: '封印', importance: 3 }
+                ]
+            },
+            {
+                id: 6,
+                name: 'アンドレアル',
+                category: '咎人',
+                resistances: [
+                    { type: '即死', importance: 5 },
+                    { type: '封印', importance: 4 },
+                    { type: '呪い', importance: 4 },
+                    { type: '幻惑', importance: 3 }
+                ]
+            },
+            {
+                id: 7,
+                name: 'ヴァリアス',
+                category: '輝晶獣',
+                resistances: [
+                    { type: '即死', importance: 5 },
+                    { type: '呪い', importance: 4 },
+                    { type: '封印', importance: 3 }
+                ]
+            }
+        ];
+
+        let bossData = defaultBossData;
+        let selectedBosses = [];
+        let searchTerm = '';
+        let selectedCategories = ['週課', '防衛軍', 'キャンプ', 'パニガルム', '異界', '常闇', '聖守護者', '咎人', '輝晶獣', 'コインボス'];
+
+        window.addEventListener("DOMContentLoaded", () => {
+            fetch("./data.json")
+                .then(res => res.json())
+                .then(json => {
+                    bossData = json;
+                    render();
+                })
+                .catch(err => {
+                    console.log('data.jsonが見つかりません。デフォルトデータを使用します。');
+                    render();
+                });
+
+            document.getElementById('toggleCategories').addEventListener('click', () => {
+                const filters = document.getElementById('categoryFilters');
+                const toggleText = document.getElementById('toggleText');
+                if (filters.classList.contains('hidden')) {
+                    filters.classList.remove('hidden');
+                    toggleText.textContent = '折りたたむ';
+                } else {
+                    filters.classList.add('hidden');
+                    toggleText.textContent = '展開';
+                }
+            });
+
+            document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
+                        .map(cb => cb.value);
+                    render();
+                });
+            });
+        });
+
+        const getImportanceStars = (importance) => {
+            const filled = Math.round(importance);
+            const empty = 5 - filled;
+            return '★'.repeat(filled) + '☆'.repeat(empty);
+        };
+
+        const getImportanceColor = (importance) => {
+            if (importance >= 4.5) return 'text-red-600';
+            if (importance >= 3.5) return 'text-orange-500';
+            if (importance >= 2.5) return 'text-yellow-600';
+            return 'text-gray-500';
+        };
+
+        const getCategoryBadgeColor = (category) => {
+            const colors = {
+                '週課': 'bg-pink-100 text-pink-800',
+                '防衛軍': 'bg-green-100 text-green-800',
+                'キャンプ': 'bg-teal-100 text-teal-800',
+                'パニガルム': 'bg-cyan-100 text-cyan-800',
+                '異界': 'bg-orange-100 text-orange-800',
+                '常闇': 'bg-purple-100 text-purple-800',
+                '聖守護者': 'bg-blue-100 text-blue-800',
+                '咎人': 'bg-red-100 text-red-800',
+                '輝晶獣': 'bg-yellow-100 text-yellow-800',
+                'コインボス': 'bg-amber-100 text-amber-800'
+            };
+            return colors[category] || 'bg-gray-100 text-gray-800';
+        };
+
+        const renderBossList = () => {
+            const filteredBosses = bossData.filter(boss => {
+                const matchesSearch = boss.name.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesCategory = selectedCategories.includes(boss.category);
+                return matchesSearch && matchesCategory;
+            });
+
+            const bossList = document.getElementById('bossList');
+            const items = filteredBosses.map(boss => {
+                const isSelected = selectedBosses.includes(boss.id);
+                const bgClass = isSelected ? 'bg-indigo-100 border-2 border-indigo-500' : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100';
+                const checked = isSelected ? 'checked' : '';
+
+                return '<label class="flex items-center p-3 rounded-lg cursor-pointer transition ' + bgClass + '">' +
+                    '<input type="checkbox" ' + checked + ' onchange="toggleBoss(' + boss.id + ')" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500" />' +
+                    '<div class="ml-3 flex-1">' +
+                    '<div class="font-medium text-gray-800">' + boss.name + '</div>' +
+                    '<span class="inline-block mt-1 px-2 py-0.5 text-xs rounded ' + getCategoryBadgeColor(boss.category) + '">' + boss.category + '</span>' +
+                    '</div>' +
+                    '<span class="ml-2 text-sm text-gray-500">' + boss.resistances.length + '種類</span>' +
+                    '</label>';
+            });
+            bossList.innerHTML = items.join('');
+
+            const clearButton = document.getElementById('clearButton');
+            clearButton.classList.toggle('hidden', selectedBosses.length === 0);
+        };
+
+        const renderResistances = () => {
+            const resultDiv = document.getElementById('resistanceResult');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (selectedBosses.length === 0) {
+                selectedCount.textContent = '';
+                resultDiv.innerHTML = '<div class="flex flex-col items-center justify-center py-12 text-gray-400">' +
+                    '<svg class="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>' +
+                    '</svg>' +
+                    '<p class="text-lg">ボスを選択してください</p>' +
+                    '</div>';
+                return;
+            }
+
+            selectedCount.textContent = '(' + selectedBosses.length + '体のボスを選択中)';
+
+            const resistanceMap = new Map();
+
+            selectedBosses.forEach(bossId => {
+                const boss = bossData.find(b => b.id === bossId);
+                boss.resistances.forEach(res => {
+                    if (resistanceMap.has(res.type)) {
+                        const existing = resistanceMap.get(res.type);
+                        resistanceMap.set(res.type, {
+                            type: res.type,
+                            maxImportance: Math.max(existing.maxImportance, res.importance),
+                            avgImportance: existing.avgImportance + res.importance,
+                            count: existing.count + 1,
+                            bosses: [...existing.bosses, boss.name]
+                        });
+                    } else {
+                        resistanceMap.set(res.type, {
+                            type: res.type,
+                            maxImportance: res.importance,
+                            avgImportance: res.importance,
+                            count: 1,
+                            bosses: [boss.name]
+                        });
+                    }
+                });
+            });
+
+            const aggregatedResistances = Array.from(resistanceMap.values())
+                .map(item => ({
+                    ...item,
+                    avgImportance: item.avgImportance / item.count
+                }))
+                .sort((a, b) => {
+                    if (b.maxImportance !== a.maxImportance) {
+                        return b.maxImportance - a.maxImportance;
+                    }
+                    return b.count - a.count;
+                });
+
+            let html = '<div class="space-y-3 max-h-96 overflow-y-auto">';
+
+            aggregatedResistances.forEach(res => {
+                html += '<div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">';
+                html += '<div class="flex items-start justify-between mb-2">';
+                html += '<div class="flex-1">';
+                html += '<h3 class="text-lg font-bold text-gray-800">' + res.type + '耐性</h3>';
+                html += '<div class="text-2xl font-bold ' + getImportanceColor(res.maxImportance) + '">';
+                html += getImportanceStars(res.maxImportance);
+                html += '</div></div>';
+                html += '<div class="text-right">';
+                html += '<div class="text-sm text-gray-600">最大重要度</div>';
+                html += '<div class="text-xl font-bold ' + getImportanceColor(res.maxImportance) + '">';
+                html += res.maxImportance + '/5</div></div></div>';
+
+                html += '<div class="mt-3 pt-3 border-t border-gray-200">';
+                html += '<div class="text-sm text-gray-600 mb-1">必要なボス (' + res.count + '体):</div>';
+                html += '<div class="flex flex-wrap gap-1">';
+                res.bosses.forEach(bossName => {
+                    html += '<span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-medium">';
+                    html += bossName + '</span>';
+                });
+                html += '</div></div>';
+
+                if (res.count > 1) {
+                    html += '<div class="mt-2 text-xs text-gray-500">';
+                    html += '平均重要度: ' + res.avgImportance.toFixed(1) + '/5</div>';
+                }
+                html += '</div>';
+            });
+
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        };
+
+        const toggleBoss = (bossId) => {
+            if (selectedBosses.includes(bossId)) {
+                selectedBosses = selectedBosses.filter(id => id !== bossId);
+            } else {
+                selectedBosses.push(bossId);
+            }
+            render();
+        };
+
+        const clearSelection = () => {
+            selectedBosses = [];
+            render();
+        };
+
+        const render = () => {
+            renderBossList();
+            renderResistances();
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderBossList();
+        });
+
+        document.getElementById('clearButton').addEventListener('click', clearSelection);
+    </script>
+</body>
+</html>
